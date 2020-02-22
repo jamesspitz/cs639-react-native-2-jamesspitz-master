@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {ScrollView, Text, TextInput, TouchableOpacity} from "react-native";
 import DatePicker from "react-native-datepicker";
-
+//TODO Fix date compare/edit
 class EditActivityArea extends Component {
     constructor(props) {
         super(props);
@@ -11,7 +11,7 @@ class EditActivityArea extends Component {
             id: this.props.navigation.state.params.activityID,
             name: this.props.navigation.state.params.activityName,
             duration: this.props.navigation.state.params.activityDuration, //Minutes
-            date: this.props.navigation.state.params.activityDate,
+            date: this.props.navigation.state.params.activityDate, // Passed in as YYYY-MM-DD substring of date
             calories: this.props.navigation.state.params.activityCalories,
             newName: "",
             newDuration: 0, //Minutes
@@ -59,8 +59,8 @@ class EditActivityArea extends Component {
         if((this.state.changedName === true) && this.state.newName !== ""){
             name = this.state.newName
         }
-
-        if((this.state.changedDate === true) && this.state.newName !== this.state.date){
+        // Compare substrings
+        if((this.state.changedDate === true) && this.state.newDate.toISOString().substring(0,10) !== this.state.date){
             date = this.state.newDate
         }
 
@@ -70,10 +70,7 @@ class EditActivityArea extends Component {
         if((this.state.changedDuration === true) && this.state.newDuration !== ""){
             duration = parseFloat(this.state.newDuration)
         }
-        console.log(name)
-       console.log(duration)
-       console.log(date)
-       console.log(calories)
+       console.log(calories);
         try{
             let response = fetch('https://mysqlcs639.cs.wisc.edu/activities/' + this.props.navigation.state.params.activityID ,{
                 method: 'PUT',
@@ -92,14 +89,14 @@ class EditActivityArea extends Component {
                 )
             }).then(response =>  {
                 let resp = response.json();
-                console.log(resp)
+                console.log(resp);
                 return resp;
             });
 
         } catch(errors) {
             console.log("Catch error is: " + errors);
         }
-        alert(`Goal Updated`);
+        alert(`Activity Updated`);
         this.props.navigation.navigate('userHomePage', {username:this.props.navigation.state.params.username, token:this.props.navigation.state.params.token.token})
 
     }
@@ -140,7 +137,11 @@ class EditActivityArea extends Component {
                         }
                     }}
                     onDateChange={(date) => {
-                        this.setState({newDate: date, changedDate: true})
+                        let dateParts = date.split('-');
+
+                        let dateFormat = new Date(dateParts[2], dateParts[0]-1, dateParts[1]);
+
+                        this.setState({newDate: dateFormat, changedDate: true})
                     }}
                 />
                 <TextInput keyboardDismissMode={'interactive'} keyboardType={'numeric'}

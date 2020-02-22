@@ -14,7 +14,17 @@ class SettingsArea extends Component {
             goalDailyCalories: 0,
             goalDailyCarbohydrates: 0,
             goalDailyFat: 0,
-            goalDailyProtein: 0
+            goalDailyProtein: 0,
+            newGoalDailyActivity: 0,
+            newGoalDailyCalories: 0,
+            newGoalDailyCarbohydrates: 0,
+            newGoalDailyFat: 0,
+            newGoalDailyProtein: 0,
+            changedActivity: false,
+            changedProtein: false,
+            changedFat: false,
+            changedCalories: false,
+            changedCarbohydrates: false
         }
     }
 
@@ -41,6 +51,33 @@ class SettingsArea extends Component {
     }
 
     async onGoalChangePress() {
+
+        let activity = this.state.newGoalDailyActivity;
+        let calories = this.state.newGoalDailyCalories;
+        let protein = this.state.newGoalDailyProtein;
+        let fat = this.state.newGoalDailyFat;
+        let carbs = this.state.newGoalDailyCarbohydrates;
+
+        // Check for changes and valid changes
+        if((this.state.changedActivity === true) && parseFloat(this.state.newGoalDailyActivity !== 0)){
+            activity = this.state.newGoalDailyActivity
+        }
+
+        if((this.state.changedCalories === true) && parseFloat(this.state.newGoalDailyCalories) !== 0){
+            calories = parseFloat(this.state.newGoalDailyCalories)
+        }
+
+        if((this.state.changedProtein === true) && parseFloat(this.state.newGoalDailyProtein) !== 0){
+            protein = parseFloat(this.state.newGoalDailyProtein)
+        }
+        if((this.state.changedCarbohydrates === true) && parseFloat(this.state.newGoalDailyCarbohydrates) !== 0){
+            carbs = parseFloat(this.state.newGoalDailyCarbohydrates)
+        }
+        if((this.state.changedFat === true) && parseFloat(this.state.newGoalDailyFat) !== 0){
+            fat = parseFloat(this.state.newGoalDailyFat)
+        }
+
+
         fetch('https://mysqlcs639.cs.wisc.edu/users/'+ this.props.navigation.state.params.username, {
             method: 'PUT',
             headers: {
@@ -50,11 +87,11 @@ class SettingsArea extends Component {
             },
             body: JSON.stringify(
                 {
-                    goalDailyActivity: parseFloat(this.state.goalDailyActivity),
-                    goalDailyCalories: parseFloat(this.state.goalDailyCalories),
-                    goalDailyCarbohydrates: parseFloat(this.state.goalDailyCarbohydrates),
-                    goalDailyFat: parseFloat(this.state.goalDailyFat),
-                    goalDailyProtein: parseFloat(this.state.goalDailyProtein)
+                    goalDailyActivity: parseFloat(activity),
+                    goalDailyCalories: parseFloat(calories),
+                    goalDailyCarbohydrates: parseFloat(carbs),
+                    goalDailyFat: parseFloat(fat),
+                    goalDailyProtein: parseFloat(protein)
                 }
             )
         }).then(response =>  {
@@ -113,7 +150,7 @@ class SettingsArea extends Component {
                             padding: 10,
                             textAlign: 'center',
                             marginBottom: 20,
-                            backgroundColor: '#ffa500',
+                            backgroundColor: '#dc143c',
                             color: '#fff'
                         }} text={'Day View'} title="HomePage" onPress = {()=>this.props.navigation.navigate('userHomePage', {username:this.props.navigation.state.params.username, token:this.props.navigation.state.params.token})}/>
                     </View>
@@ -138,15 +175,15 @@ class SettingsArea extends Component {
                 </TouchableOpacity>
 
                 <Text>Change Goals</Text>
-                <TextInput keyboardType={'numeric'} style={{ height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor: "white"}} onChangeText={(val) =>  this.setState({goalDailyActivity: val})} placeholder = "Daily Activity Goal:"
+                <TextInput keyboardType={'numeric'} style={{ height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor: "white"}} onChangeText={(val) =>  this.setState({newGoalDailyActivity: val, changedActivity: true})} placeholder = "Daily Activity Goal:"
                            placeholderTextColor = '#D4D4D4'/>
-                <TextInput keyboardType={'numeric'} style={{ height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor: "white"}} onChangeText={(val) =>  this.setState({goalDailyCalories: val})} placeholder = "Daily Calorie Goal:"
+                <TextInput keyboardType={'numeric'} style={{ height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor: "white"}} onChangeText={(val) =>  this.setState({newGoalDailyCalories: val, changedCalories: true})} placeholder = "Daily Calorie Goal:"
                            placeholderTextColor = '#D4D4D4'/>
-                <TextInput keyboardType={'numeric'} style={{ height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor: "white" }} onChangeText={(val) =>  this.setState({goalDailyCarbohydrates: val})} placeholder = "Carbohydrates Goal:"
+                <TextInput keyboardDismissMode={'interactive'} keyboardType={'numeric'} style={{ height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor: "white" }} onChangeText={(val) =>  this.setState({newGoalDailyCarbohydrates: val, changedCarbohydrates: true})} placeholder = "Carbohydrates Goal:"
                            placeholderTextColor = '#D4D4D4'/>
-                <TextInput keyboardType={'numeric'} style={{ height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor: "white"}} onChangeText={(val) =>  this.setState({goalDailyFat: val})} placeholder = "Daily Fat Goal:"
+                <TextInput keyboardDismissMode={'interactive'} keyboardType={'numeric'} style={{ height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor: "white"}} onChangeText={(val) =>  this.setState({newGoalDailyFat: val, changedFat: true})} placeholder = "Daily Fat Goal:"
                            placeholderTextColor = '#D4D4D4'/>
-                <TextInput keyboardDismissMode={'interactive'} keyboardType={'numeric'} style={{ height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor: "white" }} onChangeText={(val) =>  this.setState({goalDailyProtein: val})} placeholder = "Daily Protein Goal:"
+                <TextInput keyboardDismissMode={'interactive'} keyboardType={'numeric'} style={{ height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor: "white" }} onChangeText={(val) =>  this.setState({newGoalDailyProtein: val, changedProtein: true})} placeholder = "Daily Protein Goal:"
                            placeholderTextColor = '#D4D4D4'/>
 
                 <TouchableOpacity onPress = {this.onGoalChangePress.bind(this)} style={{paddingTop:15, borderRadius: 20, paddingBottom: 20}}>

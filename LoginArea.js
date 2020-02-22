@@ -43,15 +43,27 @@ class LoginArea extends Component {
     }
     render() {
         return (
-            <View style={{flex: 5, justifyContent: 'center', backgroundColor: '#598bff', paddingHorizontal: 25}}>
-                <TextInput style={{ height: 60, borderColor: 'gray', borderWidth: 1, backgroundColor: "white" , padding:15}} onChangeText={(val) =>  this.setState({username: val})} placeholder = "Username"
+            <View style={{flex: 5, justifyContent: 'center', backgroundColor: '#fff', paddingHorizontal: 25}}>
+                <View style={{padding:10}}>
+                <TextInput style={{ height: 60, borderColor: 'gray', borderWidth: 2, backgroundColor: "white" , padding:10}} onChangeText={(val) =>  this.setState({username: val})} placeholder = "Username"
                            placeholderTextColor = '#D4D4D4'/>
-                <TextInput style={{ height: 60, borderColor: 'gray', borderWidth: 1, backgroundColor: "white", padding:15}} secureTextEntry={true} onChangeText={(val) =>  this.setState({password: val})} placeholder = "Password:"
+                </View>
+                <View style={{padding:10, paddingBottom:15}}>
+                <TextInput style={{ height: 60, borderColor: 'gray', borderWidth: 2, backgroundColor: "white", padding:10}} secureTextEntry={true} onChangeText={(val) =>  this.setState({password: val})} placeholder = "Password:"
                            placeholderTextColor = '#D4D4D4'/>
-                <TouchableOpacity onPress = {this.onLoginPressed.bind(this)}>
-                    <Text style={{height: 40, borderRadius: 4, padding:10, textAlign: 'center', marginBottom: 20, color:'#fff', backgroundColor:'#90ee90'}}>Login</Text>
+                </View>
+
+                <View style={{padding:20}}>
+                <TouchableOpacity style={{borderRadius: 20, backgroundColor:'#598bff'}} onPress = {this.onLoginPressed.bind(this)}>
+                    <Text style={{padding:20, textAlign: 'center', color:'#fff'}}>Login</Text>
                 </TouchableOpacity>
-                <Button style={{borderRadius: 4, padding:20, textAlign: 'center', marginBottom: 20, color:'#fff', backgroundColor:'#90ee90'}} title = "Sign Up" color = "green" onPress = {() => this.props.navigation.navigate('registerPage')}/>
+                </View>
+
+                <View style={{padding:20}}>
+                    <TouchableOpacity onPress = {() => this.props.navigation.navigate('registerPage')} style={{borderRadius: 20, backgroundColor:'#90ee90'}}>
+                        <Text style={{padding:20, textAlign: 'center', color:'#fff'}}>Need an Account?</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }

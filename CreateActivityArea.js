@@ -14,12 +14,19 @@ class CreateActivityArea extends Component {
             name: "",
             duration:0, //Minutes
             date: new Date(),
-            calories:0
+            calories:0,
+            activityDate:new Date()
         }
     }
 
     async onCreateActivityPress(){
         try{
+            if(this.state.name === ""){
+                this.setState({
+                    name: "Untitled Activity"
+                })
+            }
+
             let response = await fetch('https://mysqlcs639.cs.wisc.edu/activities/' ,{
                 method: 'POST',
                 headers: {
@@ -32,23 +39,18 @@ class CreateActivityArea extends Component {
                         id: parseInt(this.state.id),
                         name: this.state.name,
                         duration: parseFloat(this.state.duration), //Minutes
-                        date: new Date(this.state.date),
+                        date: this.state.activityDate,
                         calories: parseFloat(this.state.calories)
                     }
                 )
             });
             let res =  await response.text();
             console.log(response);
-            console.log(this.state.id);
-            console.log(this.state.name);
-            console.log(this.state.duration);
-            console.log(this.state.date);
-            console.log(this.state.calories);
 
         } catch(errors) {
             console.log("Catch error is: " + errors);
         }
-        this.props.navigation.navigate('userHomePage', {username:this.props.navigation.state.params.username, token:this.state.token})
+        this.props.navigation.navigate('userHomePage', {username:this.props.navigation.state.params.username, token:this.props.navigation.state.params.token})
 
     }
 
@@ -67,12 +69,12 @@ class CreateActivityArea extends Component {
                                placeholderTextColor='#D4D4D4'/>
                     <DatePicker
                         style={{width: 200, backgroundColor: "white"}}
-                        date={this.state.date}
+                        date={this.state.activityDate}
                         mode="date"
                         placeholder="Select Date"
-                        format="YYYY-MM-DD"
-                        minDate="2019-01-01"
-                        maxDate="2020-01-01"
+                        format="MM-DD-YYYY"
+                        minDate="01-01-2018"
+                        maxDate="01-01-2020"
                         confirmBtnText="Confirm"
                         cancelBtnText="Cancel"
                         customStyles={{
@@ -87,7 +89,10 @@ class CreateActivityArea extends Component {
                             }
                         }}
                         onDateChange={(date) => {
-                            this.setState({date: date})
+                            let dateParts = date.split('-');
+
+                            let dateFormat = new Date(dateParts[2], dateParts[0]-1, dateParts[1]);
+                            this.setState({activityDate: dateFormat})
                         }}
                     />
                     <TextInput keyboardDismissMode={'interactive'} keyboardType={'numeric'}
@@ -107,7 +112,6 @@ class CreateActivityArea extends Component {
                             height: 50
 
                         }}>CREATE</Text>
-                        <Text>{this.props.navigation.state.params.token.token}</Text>
                     </TouchableOpacity>
                 </ScrollView>
             )
